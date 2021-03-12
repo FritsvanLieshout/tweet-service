@@ -2,7 +2,9 @@ package com.kwetter.frits.tweetservice.controller;
 
 import com.kwetter.frits.tweetservice.entity.Tweet;
 import com.kwetter.frits.tweetservice.logic.TweetLogicImpl;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +19,15 @@ public class TweetController {
     @Autowired
     TweetLogicImpl tweetLogic;
 
+    @Autowired
+    private AmqpTemplate rabbitTemplate;
+
+    @Value("${kwetter.rabbitmq.exchange}")
+    private String exchange;
+    @Value("${kwetter.rabbitmq.routingkey}")
+    private String routingkey;
+
+
     @GetMapping()
     public ResponseEntity<List<Tweet>> retrieveAllTweets() {
         try {
@@ -26,6 +37,7 @@ public class TweetController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
+            rabbitTemplate.convertAndSend(exchange, routingkey, _tweets);
             return new ResponseEntity<>(_tweets, HttpStatus.OK);
 
         }
