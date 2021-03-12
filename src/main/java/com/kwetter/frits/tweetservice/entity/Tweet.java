@@ -62,6 +62,6 @@ public class Tweet {
 
     @Override
     public String toString() {
-        return "Tutorial [id=" + id + ", user_id=" + userId + ", message=" + message + ", posted=" + posted + "]";
+        return "Tweet [id=" + id + ", user_id=" + userId + ", message=" + message + ", posted=" + posted + "]";
     }
 }
