@@ -16,17 +16,16 @@ import java.util.List;
 @RequestMapping("/api/tweets")
 public class TweetController {
 
-    @Autowired
-    TweetLogicImpl tweetLogic;
+    private final TweetLogicImpl tweetLogic;
 
     @Autowired
     private AmqpTemplate rabbitTemplate;
-
     @Value("${kwetter.rabbitmq.exchange}")
     private String exchange;
     @Value("${kwetter.rabbitmq.routingkey}")
     private String routingkey;
 
+    public TweetController(TweetLogicImpl tweetLogic) { this.tweetLogic = tweetLogic; }
 
     @GetMapping()
     public ResponseEntity<List<Tweet>> retrieveAllTweets() {
@@ -49,6 +48,7 @@ public class TweetController {
     @PostMapping()
     public ResponseEntity<Tweet> postTweet(@RequestBody Tweet tweet) {
         try {
+            System.out.println(tweet.toString());
             Tweet _tweet = tweetLogic.post(new Tweet(tweet.getUserId(), tweet.getMessage()));
             return new ResponseEntity<>(_tweet, HttpStatus.CREATED);
         }

@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class TweetLogicImpl implements TweetLogic {
 
-    private TweetRepository tweetRepository;
+    private final TweetRepository tweetRepository;
 
     public TweetLogicImpl(TweetRepository tweetRepository) {
         this.tweetRepository = tweetRepository;
