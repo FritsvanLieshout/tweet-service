@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(maxAge = 3600)
 @RestController
 @RequestMapping("/api/tweets")
 public class TweetController {
@@ -27,7 +28,7 @@ public class TweetController {
 
     public TweetController(TweetLogicImpl tweetLogic) { this.tweetLogic = tweetLogic; }
 
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<List<Tweet>> retrieveAllTweets() {
         try {
             List<Tweet> _tweets = new ArrayList<>(tweetLogic.findAll());
@@ -45,7 +46,7 @@ public class TweetController {
         }
     }
 
-    @PostMapping()
+    @PostMapping("/tweet")
     public ResponseEntity<Tweet> postTweet(@RequestBody Tweet tweet) {
         try {
             System.out.println(tweet.toString());

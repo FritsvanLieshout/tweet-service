@@ -20,7 +20,7 @@ public class TweetLogicImpl implements TweetLogic {
 
     @Override
     public List<Tweet> findAll() {
-        return tweetRepository.findAll();
+        return tweetRepository.findAllByOrderByPostedDesc();
     }
 
     @Override
