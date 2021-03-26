@@ -2,7 +2,9 @@ package com.kwetter.frits.tweetservice.controller;
 
 import com.kwetter.frits.tweetservice.entity.Tweet;
 import com.kwetter.frits.tweetservice.logic.TweetLogicImpl;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +16,18 @@ import java.util.List;
 @RequestMapping("/api/tweets")
 public class TweetController {
 
-    @Autowired
-    TweetLogicImpl tweetLogic;
+    private final TweetLogicImpl tweetLogic;
 
-    @GetMapping()
+    @Autowired
+    private AmqpTemplate rabbitTemplate;
+    @Value("${kwetter.rabbitmq.exchange}")
+    private String exchange;
+    @Value("${kwetter.rabbitmq.routingkey}")
+    private String routingkey;
+
+    public TweetController(TweetLogicImpl tweetLogic) { this.tweetLogic = tweetLogic; }
+
+    @GetMapping("/all")
     public ResponseEntity<List<Tweet>> retrieveAllTweets() {
         try {
             List<Tweet> _tweets = new ArrayList<>(tweetLogic.findAll());
@@ -26,6 +36,7 @@ public class TweetController {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
 
+            rabbitTemplate.convertAndSend(exchange, routingkey, _tweets);
             return new ResponseEntity<>(_tweets, HttpStatus.OK);
 
         }
@@ -34,9 +45,10 @@ public class TweetController {
         }
     }
 
-    @PostMapping()
+    @PostMapping("/tweet")
     public ResponseEntity<Tweet> postTweet(@RequestBody Tweet tweet) {
         try {
+            System.out.println(tweet.toString());
             Tweet _tweet = tweetLogic.post(new Tweet(tweet.getUserId(), tweet.getMessage()));
             return new ResponseEntity<>(_tweet, HttpStatus.CREATED);
         }
