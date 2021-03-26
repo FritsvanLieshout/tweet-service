@@ -1,6 +1,7 @@
 package com.kwetter.frits.tweetservice.controller;
 
 import com.kwetter.frits.tweetservice.entity.Tweet;
+import com.kwetter.frits.tweetservice.logic.TimelineServiceImpl;
 import com.kwetter.frits.tweetservice.logic.TweetLogicImpl;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import java.util.List;
 public class TweetController {
 
     private final TweetLogicImpl tweetLogic;
+    private final TimelineServiceImpl timelineService;
 
     @Autowired
     private AmqpTemplate rabbitTemplate;
@@ -25,7 +27,7 @@ public class TweetController {
     @Value("${kwetter.rabbitmq.routingkey}")
     private String routingkey;
 
-    public TweetController(TweetLogicImpl tweetLogic) { this.tweetLogic = tweetLogic; }
+    public TweetController(TweetLogicImpl tweetLogic, TimelineServiceImpl timelineService) { this.tweetLogic = tweetLogic; this.timelineService = timelineService; }
 
     @GetMapping("/all")
     public ResponseEntity<List<Tweet>> retrieveAllTweets() {
@@ -48,8 +50,10 @@ public class TweetController {
     @PostMapping("/tweet")
     public ResponseEntity<Tweet> postTweet(@RequestBody Tweet tweet) {
         try {
-            System.out.println(tweet.toString());
             Tweet _tweet = tweetLogic.post(new Tweet(tweet.getUserId(), tweet.getMessage()));
+
+            timelineService.timeLineTweetPost(_tweet);
+
             return new ResponseEntity<>(_tweet, HttpStatus.CREATED);
         }
 
