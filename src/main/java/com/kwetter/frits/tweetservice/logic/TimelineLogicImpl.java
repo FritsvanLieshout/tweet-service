@@ -15,19 +15,19 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Service
-public class TimelineServiceImpl {
+public class TimelineLogicImpl {
 
-    private final Logger log = LoggerFactory.getLogger(TimelineServiceImpl.class);
+    private final Logger log = LoggerFactory.getLogger(TimelineLogicImpl.class);
 
     private static final String TOPIC = "topic_timeline";
 
     private final KafkaProperties kafkaProperties;
 
-    private final static Logger logger = LoggerFactory.getLogger(TimelineServiceImpl.class);
+    private final static Logger logger = LoggerFactory.getLogger(TimelineLogicImpl.class);
     private KafkaProducer<String, String> producer;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public TimelineServiceImpl(KafkaProperties kafkaProperties) {
+    public TimelineLogicImpl(KafkaProperties kafkaProperties) {
         this.kafkaProperties = kafkaProperties;
     }
 
