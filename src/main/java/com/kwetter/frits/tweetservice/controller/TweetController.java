@@ -6,6 +6,7 @@ import com.kwetter.frits.tweetservice.logic.TweetLogicImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class TweetController {
     @PostMapping("/tweet")
     public ResponseEntity<Tweet> postTweet(@RequestBody Tweet tweet) {
         try {
-            Tweet _tweet = tweetLogic.post(new Tweet(tweet.getUserId(), tweet.getMessage()));
+            Tweet _tweet = tweetLogic.post(new Tweet(tweet.getTweetUser(), tweet.getMessage()));
             timelineService.timeLineTweetPost(_tweet);
 
             return new ResponseEntity<>(_tweet, HttpStatus.CREATED);

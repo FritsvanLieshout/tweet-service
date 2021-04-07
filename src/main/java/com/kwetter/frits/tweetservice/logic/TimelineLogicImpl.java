@@ -41,7 +41,7 @@ public class TimelineLogicImpl {
 
     public void timeLineTweetPost(Tweet tweet) throws Exception {
         try {
-            TweetTimelineDTO tweetTimelineDTO = new TweetTimelineDTO(tweet.getUserId(), tweet.getMessage(), tweet.getPosted());
+            TweetTimelineDTO tweetTimelineDTO = new TweetTimelineDTO(tweet.getTweetUser(), tweet.getMessage(), tweet.getPosted());
             String message = objectMapper.writeValueAsString(tweetTimelineDTO);
             ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, message);
             producer.send(record);
