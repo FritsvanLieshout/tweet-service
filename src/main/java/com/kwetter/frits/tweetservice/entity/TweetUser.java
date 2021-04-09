@@ -8,14 +8,16 @@ public class TweetUser {
     private String username;
     private String nickName;
     private String profileImage;
+    private Boolean verified;
 
     public TweetUser() {}
 
-    public TweetUser(UUID userId, String username, String nickName, String profileImage) {
+    public TweetUser(UUID userId, String username, String nickName, String profileImage, Boolean verified) {
         this.userId = userId;
         this.username = username;
         this.nickName = nickName;
         this.profileImage = profileImage;
+        this.verified = verified;
     }
 
     public UUID getUserId() {
@@ -49,4 +51,8 @@ public class TweetUser {
     public void setProfileImage(String profileImage) {
         this.profileImage = profileImage;
     }
+
+    public Boolean getVerified() { return verified; }
+
+    public void setVerified(Boolean verified) { this.verified = verified; }
 }

@@ -19,7 +19,7 @@ public class TimelineLogicImpl {
 
     private final Logger log = LoggerFactory.getLogger(TimelineLogicImpl.class);
 
-    private static final String TOPIC = "topic_timeline";
+    private static final String TOPIC = "tweet-posted";
 
     private final KafkaProperties kafkaProperties;
 
