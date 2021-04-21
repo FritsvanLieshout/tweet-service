@@ -9,21 +9,20 @@ public class Tweet {
     @Id
     private String id;
 
-    private int userId;
+    private TweetUser tweetUser;
     private String message;
-
     private String posted;
 
     public Tweet() {}
 
-    public Tweet(int userId, String message) {
-        this.userId = userId;
+    public Tweet(TweetUser tweetUser, String message) {
+        this.tweetUser = tweetUser;
         this.message = message;
     }
 
-    public Tweet(String id, int userId, String message, String posted) {
+    public Tweet(String id, TweetUser tweetUser, String message, String posted) {
         this.id = id;
-        this.userId = userId;
+        this.tweetUser = tweetUser;
         this.message = message;
         this.posted = posted;
     }
@@ -36,12 +35,12 @@ public class Tweet {
         this.id = id;
     }
 
-    public int getUserId() {
-        return userId;
+    public TweetUser getTweetUser() {
+        return tweetUser;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setTweetUser(TweetUser tweetUser) {
+        this.tweetUser = tweetUser;
     }
 
     public String getMessage() {
@@ -62,6 +61,6 @@ public class Tweet {
 
     @Override
     public String toString() {
-        return "Tweet [id=" + id + ", user_id=" + userId + ", message=" + message + ", posted=" + posted + "]";
+        return "Tweet [id=" + id + ", user=" + tweetUser.toString() + ", message=" + message + ", posted=" + posted + "]";
     }
 }
