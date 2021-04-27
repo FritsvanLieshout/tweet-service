@@ -46,4 +46,19 @@ public class TweetController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/tweet")
+    public ResponseEntity<Tweet> getTweetById(@RequestParam String tweetId) {
+        try {
+            //ID not found
+            Tweet tweet = tweetLogic.getTweetById(tweetId);
+            if (tweet != null) {
+                return new ResponseEntity<>(tweet, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
