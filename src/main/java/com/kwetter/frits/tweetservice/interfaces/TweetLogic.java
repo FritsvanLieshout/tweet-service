@@ -9,4 +9,5 @@ import java.util.List;
 public interface TweetLogic {
     List<Tweet> findAll();
     Tweet post(Tweet tweet);
+    Tweet getTweetById(String id);
 }

@@ -30,4 +30,9 @@ public class TweetLogicImpl implements TweetLogic {
 
         return tweetRepository.save(tweet);
     }
+
+    @Override
+    public Tweet getTweetById(String id) {
+        return tweetRepository.findTweetById(id);
+    }
 }
