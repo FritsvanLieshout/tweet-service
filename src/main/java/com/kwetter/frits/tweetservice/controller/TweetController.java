@@ -1,6 +1,7 @@
 package com.kwetter.frits.tweetservice.controller;
 
 import com.kwetter.frits.tweetservice.entity.Tweet;
+import com.kwetter.frits.tweetservice.entity.TweetViewModel;
 import com.kwetter.frits.tweetservice.logic.TimelineLogicImpl;
 import com.kwetter.frits.tweetservice.logic.TweetLogicImpl;
 import org.springframework.http.HttpStatus;
@@ -35,12 +36,12 @@ public class TweetController {
     }
 
     @PostMapping("/tweet")
-    public ResponseEntity<Tweet> postTweet(@RequestBody Tweet tweet) {
+    public ResponseEntity<Tweet> postTweet(@RequestBody TweetViewModel tweetViewModel) {
         try {
-            Tweet _tweet = tweetLogic.post(new Tweet(tweet.getTweetUser(), tweet.getMessage()));
-            timelineService.timeLineTweetPost(_tweet);
+            Tweet tweet = tweetLogic.post(new Tweet(tweetViewModel.getTweetUser(), tweetViewModel.getMessage()));
+            timelineService.timeLineTweetPost(tweet);
 
-            return new ResponseEntity<>(_tweet, HttpStatus.CREATED);
+            return new ResponseEntity<>(tweet, HttpStatus.CREATED);
         }
         catch (Exception ex) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
