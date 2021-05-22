@@ -1,8 +1,8 @@
-package com.kwetter.frits.tweetservice.entity;
+package com.kwetter.frits.tweetservice.logic.dto;
 
 import java.util.UUID;
 
-public class TweetUser {
+public class TweetUserDTO {
 
     private UUID userId;
     private String username;
@@ -11,9 +11,9 @@ public class TweetUser {
     private Boolean verified;
     private String biography;
 
-    public TweetUser() {}
+    public TweetUserDTO() {}
 
-    public TweetUser(UUID userId, String username, String nickName, String profileImage, Boolean verified, String biography) {
+    public TweetUserDTO(UUID userId, String username, String nickName, String profileImage, Boolean verified, String biography) {
         this.userId = userId;
         this.username = username;
         this.nickName = nickName;
@@ -54,11 +54,16 @@ public class TweetUser {
         this.profileImage = profileImage;
     }
 
-    public Boolean getVerified() { return verified; }
+    public Boolean getVerified() {
+        return verified;
+    }
 
-    public void setVerified(Boolean verified) { this.verified = verified; }
+    public void setVerified(Boolean verified) {
+        this.verified = verified;
+    }
 
     public String getBiography() { return biography; }
 
     public void setBiography(String biography) { this.biography = biography; }
 }
+
