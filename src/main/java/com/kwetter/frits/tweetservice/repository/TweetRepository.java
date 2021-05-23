@@ -12,4 +12,6 @@ public interface TweetRepository extends MongoRepository<Tweet, String> {
     List<Tweet> findAllByOrderByPostedDesc();
     Tweet findTweetById(String id);
     List<Tweet> findTweetByTweetUser_UsernameAndTweetUser_UserId(String username, UUID userId);
+    List<Tweet> findTweetByMentions(String username);
+    List<Tweet> findTop20ByMentionsOrderByPostedDesc(String username);
 }

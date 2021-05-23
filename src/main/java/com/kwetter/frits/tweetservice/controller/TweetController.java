@@ -16,9 +16,9 @@ import java.util.List;
 public class TweetController {
 
     private final TweetLogicImpl tweetLogic;
-    private final TimelineLogicImpl timelineService;
+    private final TimelineLogicImpl timelineLogic;
 
-    public TweetController(TweetLogicImpl tweetLogic, TimelineLogicImpl timelineService) { this.tweetLogic = tweetLogic; this.timelineService = timelineService; }
+    public TweetController(TweetLogicImpl tweetLogic, TimelineLogicImpl timelineLogic) { this.tweetLogic = tweetLogic; this.timelineLogic = timelineLogic; }
 
     @GetMapping("/all")
     public ResponseEntity<List<Tweet>> retrieveAllTweets() {
@@ -38,8 +38,17 @@ public class TweetController {
     @PostMapping("/tweet")
     public ResponseEntity<Tweet> postTweet(@RequestBody TweetViewModel tweetViewModel) {
         try {
-            Tweet tweet = tweetLogic.post(new Tweet(tweetViewModel.getTweetUser(), tweetViewModel.getMessage()));
-            timelineService.timeLineTweetPost(tweet);
+            var tweet = new Tweet(tweetViewModel.getTweetUser(), tweetViewModel.getMessage());
+            tweet.setMentions(new ArrayList<>());
+            tweet.setHashtags(new ArrayList<>());
+            if (tweetViewModel.getMentions() != null) {
+                tweet.setMentions(tweetLogic.convertCSVToList(tweetViewModel.getMentions()));
+            }
+            if (tweetViewModel.getHashtags() != null) {
+                tweet.setHashtags(tweetLogic.convertCSVToList(tweetViewModel.getHashtags()));
+            }
+            tweetLogic.post(tweet);
+            timelineLogic.timeLineTweetPost(tweet);
 
             return new ResponseEntity<>(tweet, HttpStatus.CREATED);
         }
@@ -51,12 +60,25 @@ public class TweetController {
     @GetMapping("/tweet")
     public ResponseEntity<Tweet> getTweetById(@RequestParam String tweetId) {
         try {
-            //ID not found
             Tweet tweet = tweetLogic.getTweetById(tweetId);
             if (tweet != null) {
                 return new ResponseEntity<>(tweet, HttpStatus.OK);
             }
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        }
+        catch (Exception ex) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/mentions")
+    public ResponseEntity<List<Tweet>> getMentionsByUsername(@RequestParam String username) {
+        try {
+            var mentions = tweetLogic.findAllByMentions(username);
+            if (mentions.isEmpty()) {
+                return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(mentions, HttpStatus.OK);
         }
         catch (Exception ex) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

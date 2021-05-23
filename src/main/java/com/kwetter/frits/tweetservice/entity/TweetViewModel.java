@@ -5,6 +5,8 @@ public class TweetViewModel {
     private TweetUser tweetUser;
     private String message;
     private String posted;
+    private String mentions;
+    private String hashtags;
 
     public TweetUser getTweetUser() {
         return tweetUser;
@@ -29,4 +31,12 @@ public class TweetViewModel {
     public void setPosted(String posted) {
         this.posted = posted;
     }
+
+    public String getMentions() { return mentions; }
+
+    public void setMentions(String mentions) { this.mentions = mentions; }
+
+    public String getHashtags() { return hashtags; }
+
+    public void setHashtags(String hashtags) { this.hashtags = hashtags; }
 }

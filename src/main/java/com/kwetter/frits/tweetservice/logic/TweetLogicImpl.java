@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -34,5 +35,15 @@ public class TweetLogicImpl implements TweetLogic {
     @Override
     public Tweet getTweetById(String id) {
         return tweetRepository.findTweetById(id);
+    }
+
+    @Override
+    public List<String> convertCSVToList(String csv) {
+        return Arrays.asList(csv.split(","));
+    }
+
+    @Override
+    public List<Tweet> findAllByMentions(String username) {
+        return tweetRepository.findTop20ByMentionsOrderByPostedDesc(username);
     }
 }

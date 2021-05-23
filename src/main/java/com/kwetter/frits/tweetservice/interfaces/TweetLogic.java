@@ -10,4 +10,6 @@ public interface TweetLogic {
     List<Tweet> findAll();
     Tweet post(Tweet tweet);
     Tweet getTweetById(String id);
+    List<String> convertCSVToList(String csv);
+    List<Tweet> findAllByMentions(String username);
 }

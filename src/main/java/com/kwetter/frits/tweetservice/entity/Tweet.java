@@ -3,6 +3,8 @@ package com.kwetter.frits.tweetservice.entity;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Document(collection = "tweet")
 public class Tweet {
 
@@ -12,19 +14,14 @@ public class Tweet {
     private TweetUser tweetUser;
     private String message;
     private String posted;
+    private List<String> mentions;
+    private List<String> hashtags;
 
     public Tweet() {}
 
     public Tweet(TweetUser tweetUser, String message) {
         this.tweetUser = tweetUser;
         this.message = message;
-    }
-
-    public Tweet(String id, TweetUser tweetUser, String message, String posted) {
-        this.id = id;
-        this.tweetUser = tweetUser;
-        this.message = message;
-        this.posted = posted;
     }
 
     public String getId() {
@@ -58,6 +55,14 @@ public class Tweet {
     public void setPosted(String posted) {
         this.posted = posted;
     }
+
+    public List<String> getMentions() { return mentions; }
+
+    public void setMentions(List<String> mentions) { this.mentions = mentions; }
+
+    public List<String> getHashtags() { return hashtags; }
+
+    public void setHashtags(List<String> hashtags) { this.hashtags = hashtags; }
 
     @Override
     public String toString() {
