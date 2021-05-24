@@ -3,6 +3,7 @@ package com.kwetter.frits.tweetservice.controller;
 import com.kwetter.frits.tweetservice.entity.Tweet;
 import com.kwetter.frits.tweetservice.entity.TweetViewModel;
 import com.kwetter.frits.tweetservice.logic.TimelineLogicImpl;
+import com.kwetter.frits.tweetservice.logic.TrendingLogicImpl;
 import com.kwetter.frits.tweetservice.logic.TweetLogicImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,13 @@ public class TweetController {
 
     private final TweetLogicImpl tweetLogic;
     private final TimelineLogicImpl timelineLogic;
+    private final TrendingLogicImpl trendingLogic;
 
-    public TweetController(TweetLogicImpl tweetLogic, TimelineLogicImpl timelineLogic) { this.tweetLogic = tweetLogic; this.timelineLogic = timelineLogic; }
+    public TweetController(TweetLogicImpl tweetLogic, TimelineLogicImpl timelineLogic, TrendingLogicImpl trendingLogic) {
+        this.tweetLogic = tweetLogic;
+        this.timelineLogic = timelineLogic;
+        this.trendingLogic = trendingLogic;
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Tweet>> retrieveAllTweets() {
@@ -46,6 +52,7 @@ public class TweetController {
             }
             if (tweetViewModel.getHashtags() != null) {
                 tweet.setHashtags(tweetLogic.convertCSVToList(tweetViewModel.getHashtags()));
+                trendingLogic.trendingItemCreate(tweet.getHashtags());
             }
             tweetLogic.post(tweet);
             timelineLogic.timeLineTweetPost(tweet);
