@@ -2,6 +2,7 @@ package com.kwetter.frits.tweetservice.controller;
 
 import com.kwetter.frits.tweetservice.entity.Tweet;
 import com.kwetter.frits.tweetservice.entity.TweetViewModel;
+import com.kwetter.frits.tweetservice.exceptions.SwearWordException;
 import com.kwetter.frits.tweetservice.logic.TimelineLogicImpl;
 import com.kwetter.frits.tweetservice.logic.TrendingLogicImpl;
 import com.kwetter.frits.tweetservice.logic.TweetLogicImpl;
@@ -42,7 +43,7 @@ public class TweetController {
     }
 
     @PostMapping("/tweet")
-    public ResponseEntity<Tweet> postTweet(@RequestBody TweetViewModel tweetViewModel) {
+    public ResponseEntity<?> postTweet(@RequestBody TweetViewModel tweetViewModel) {
         try {
             var tweet = new Tweet(tweetViewModel.getTweetUser(), tweetViewModel.getMessage());
             if (!tweetLogic.checkSwearWords(tweet.getMessage())) {
@@ -59,7 +60,7 @@ public class TweetController {
                 timelineLogic.timeLineTweetPost(tweet);
                 return new ResponseEntity<>(tweet, HttpStatus.CREATED);
             }
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT); //ERROR HANDLING SWEAR WORDS
+            return new ResponseEntity<>(new SwearWordException(), HttpStatus.NO_CONTENT); //ERROR HANDLING SWEAR WORDS
         }
         catch (Exception ex) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
