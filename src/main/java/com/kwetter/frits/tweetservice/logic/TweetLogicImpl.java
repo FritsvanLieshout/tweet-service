@@ -9,13 +9,13 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TweetLogicImpl implements TweetLogic {
@@ -68,15 +68,19 @@ public class TweetLogicImpl implements TweetLogic {
 
         try {
             log.info("--- START CHECK SWEAR WORD ---");
-            ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Boolean.class);
-            log.info("Status code: {}", responseEntity.getStatusCode().value());
+            ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+            var result = responseEntity.getBody();
             log.info("--- SWEAR WORDS CHECKED ---");
-            log.info("--- CONTAINS SWEAR WORD : {}", responseEntity.getBody());
-            return responseEntity.getBody();
+            log.info("--- CONTAINS SWEAR WORD : {}", result);
+
+            if (result != null) {
+                return Objects.equals(responseEntity.getBody(), "True");
+            }
+            return false;
         }
 
-        catch (HttpClientErrorException e) {
-            log.info("Status code: {}", e.getStatusCode().value());
+        catch (Exception e) {
+            log.info("Error: {}", e.getMessage());
         }
         return false;
     }
