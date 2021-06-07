@@ -5,10 +5,11 @@ import com.kwetter.frits.tweetservice.interfaces.TweetLogic;
 import com.kwetter.frits.tweetservice.repository.TweetRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
@@ -60,14 +61,23 @@ public class TweetLogicImpl implements TweetLogic {
         var restTemplate = new RestTemplate();
         var headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        String content = "{\"input\":\"" + text + "\"}";
-        HttpEntity<String> entity = new HttpEntity<>(content, headers);
 
-        log.info("--- START CHECK SWEAR WORD ---");
-        Boolean answer = restTemplate.postForObject(url, entity, Boolean.class);
-        log.info("--- SWEAR WORDS CHECKED ---");
-        log.info("--- CONTAINS SWEAR WORD : {}", answer);
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("input", text);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(map, headers);
 
-        return answer;
+        try {
+            log.info("--- START CHECK SWEAR WORD ---");
+            ResponseEntity<Boolean> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, Boolean.class);
+            log.info("Status code: {}", responseEntity.getStatusCode().value());
+            log.info("--- SWEAR WORDS CHECKED ---");
+            log.info("--- CONTAINS SWEAR WORD : {}", responseEntity.getBody());
+            return responseEntity.getBody();
+        }
+
+        catch (HttpClientErrorException e) {
+            log.info("Status code: {}", e.getStatusCode().value());
+        }
+        return false;
     }
 }
