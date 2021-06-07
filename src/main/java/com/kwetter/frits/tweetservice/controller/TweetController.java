@@ -45,19 +45,21 @@ public class TweetController {
     public ResponseEntity<Tweet> postTweet(@RequestBody TweetViewModel tweetViewModel) {
         try {
             var tweet = new Tweet(tweetViewModel.getTweetUser(), tweetViewModel.getMessage());
-            tweet.setMentions(new ArrayList<>());
-            tweet.setHashtags(new ArrayList<>());
-            if (tweetViewModel.getMentions() != null) {
-                tweet.setMentions(tweetLogic.convertCSVToList(tweetViewModel.getMentions()));
+            if (!tweetLogic.checkSwearWords(tweet.getMessage())) {
+                tweet.setMentions(new ArrayList<>());
+                tweet.setHashtags(new ArrayList<>());
+                if (tweetViewModel.getMentions() != null) {
+                    tweet.setMentions(tweetLogic.convertCSVToList(tweetViewModel.getMentions()));
+                }
+                if (tweetViewModel.getHashtags() != null) {
+                    tweet.setHashtags(tweetLogic.convertCSVToList(tweetViewModel.getHashtags()));
+                    trendingLogic.trendingItemCreate(tweet.getHashtags());
+                }
+                tweetLogic.post(tweet);
+                timelineLogic.timeLineTweetPost(tweet);
+                return new ResponseEntity<>(tweet, HttpStatus.CREATED);
             }
-            if (tweetViewModel.getHashtags() != null) {
-                tweet.setHashtags(tweetLogic.convertCSVToList(tweetViewModel.getHashtags()));
-                trendingLogic.trendingItemCreate(tweet.getHashtags());
-            }
-            tweetLogic.post(tweet);
-            timelineLogic.timeLineTweetPost(tweet);
-
-            return new ResponseEntity<>(tweet, HttpStatus.CREATED);
+            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT); //ERROR HANDLING SWEAR WORDS
         }
         catch (Exception ex) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

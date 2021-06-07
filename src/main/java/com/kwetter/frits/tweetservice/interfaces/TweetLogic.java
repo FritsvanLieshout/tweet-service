@@ -12,4 +12,5 @@ public interface TweetLogic {
     Tweet getTweetById(String id);
     List<String> convertCSVToList(String csv);
     List<Tweet> findAllByMentions(String username);
+    Boolean checkSwearWords(String text);
 }
