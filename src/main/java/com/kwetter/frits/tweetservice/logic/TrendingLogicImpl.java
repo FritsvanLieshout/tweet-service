@@ -30,10 +30,11 @@ public class TrendingLogicImpl implements TrendingLogic {
 
     public TrendingLogicImpl(KafkaProperties kafkaProperties) {
         this.kafkaProperties = kafkaProperties;
+        initialize();
     }
 
     @PostConstruct
-    public void initialize(){
+    public void initialize() {
         log.info("Kafka producer initializing...");
         this.producer = new KafkaProducer<>(kafkaProperties.getProducerProps());
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));

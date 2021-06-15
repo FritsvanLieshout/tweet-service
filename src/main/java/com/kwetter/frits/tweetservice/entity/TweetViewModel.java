@@ -8,6 +8,17 @@ public class TweetViewModel {
     private String mentions;
     private String hashtags;
 
+    public TweetViewModel() {
+    }
+
+    public TweetViewModel(TweetUser tweetUser, String message, String posted, String mentions, String hashtags) {
+        this.tweetUser = tweetUser;
+        this.message = message;
+        this.posted = posted;
+        this.mentions = mentions;
+        this.hashtags = hashtags;
+    }
+
     public TweetUser getTweetUser() {
         return tweetUser;
     }

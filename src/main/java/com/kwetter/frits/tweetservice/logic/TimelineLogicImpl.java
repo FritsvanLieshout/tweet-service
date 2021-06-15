@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kwetter.frits.tweetservice.configuration.KafkaProperties;
 import com.kwetter.frits.tweetservice.entity.Tweet;
+import com.kwetter.frits.tweetservice.interfaces.TimelineLogic;
 import com.kwetter.frits.tweetservice.logic.dto.TweetTimelineDTO;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -15,7 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @Service
-public class TimelineLogicImpl {
+public class TimelineLogicImpl implements TimelineLogic {
 
     private final Logger log = LoggerFactory.getLogger(TimelineLogicImpl.class);
 
@@ -29,6 +30,7 @@ public class TimelineLogicImpl {
 
     public TimelineLogicImpl(KafkaProperties kafkaProperties) {
         this.kafkaProperties = kafkaProperties;
+        initialize();
     }
 
     @PostConstruct
@@ -39,15 +41,15 @@ public class TimelineLogicImpl {
         log.info("Kafka producer initialized");
     }
 
-    public void timeLineTweetPost(Tweet tweet) throws Exception {
+    @Override
+    public void timeLineTweetPost(Tweet tweet) {
         try {
-            TweetTimelineDTO tweetTimelineDTO = new TweetTimelineDTO(tweet.getTweetUser(), tweet.getMessage(), tweet.getPosted(), tweet.getMentions(), tweet.getHashtags());
-            String message = objectMapper.writeValueAsString(tweetTimelineDTO);
+            var tweetTimelineDTO = new TweetTimelineDTO(tweet.getTweetUser(), tweet.getMessage(), tweet.getPosted(), tweet.getMentions(), tweet.getHashtags());
+            var message = objectMapper.writeValueAsString(tweetTimelineDTO);
             ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, message);
             producer.send(record);
         } catch (JsonProcessingException e) {
             logger.error("Could not send tweet", e);
-            throw new Exception(e);
         }
     }
 
