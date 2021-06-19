@@ -74,7 +74,7 @@ public class TweetLogicImpl implements TweetLogic {
             log.info("--- CONTAINS SWEAR WORD : {}", result);
 
             if (result != null) {
-                return Objects.equals(responseEntity.getBody(), "True");
+                return Objects.equals(result, "True");
             }
             return false;
         }
