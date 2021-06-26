@@ -10,16 +10,18 @@ public class TweetUserDTO {
     private String profileImage;
     private Boolean verified;
     private String biography;
+    private String role;
 
     public TweetUserDTO() {}
 
-    public TweetUserDTO(UUID userId, String username, String nickName, String profileImage, Boolean verified, String biography) {
+    public TweetUserDTO(UUID userId, String username, String nickName, String profileImage, Boolean verified, String biography, String role) {
         this.userId = userId;
         this.username = username;
         this.nickName = nickName;
         this.profileImage = profileImage;
         this.verified = verified;
         this.biography = biography;
+        this.role = role;
     }
 
     public UUID getUserId() {
@@ -50,9 +52,7 @@ public class TweetUserDTO {
         return profileImage;
     }
 
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
-    }
+    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
 
     public Boolean getVerified() {
         return verified;
@@ -65,5 +65,9 @@ public class TweetUserDTO {
     public String getBiography() { return biography; }
 
     public void setBiography(String biography) { this.biography = biography; }
+
+    public String getRole() { return role; }
+
+    public void setRole(String role) { this.role = role; }
 }
 
